@@ -2,6 +2,7 @@ import Fastify, { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 import { z } from "zod";
 import { getClasses, getCurriculumStats } from "../../../packages/curriculum/src/curriculum.service";
 import { hasRole, UserRole } from "../../../packages/auth/src";
+import { registerAuthRoutes } from "./auth/routes";
 
 const port = Number(process.env.PORT ?? 4000);
 
@@ -20,6 +21,8 @@ const createServer = (): FastifyInstance => {
       return { classes, stats };
     }
   );
+
+  registerAuthRoutes(app);
 
   const adminHeadersSchema = z.object({
     "x-user-id": z.string().min(1),
