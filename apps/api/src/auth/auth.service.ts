@@ -1,11 +1,12 @@
 import { HttpException, Inject, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import type { EmailOtpPurpose } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { MailerService } from "../mailer/mailer.service";
 import { PrismaService } from "../prisma/prisma.service";
 import { signAccessToken } from "./jwt";
 import { generateOtp, hashOtp, OTP_TTL_MS, verifyOtp } from "./otp.util";
+
+type EmailOtpPurpose = "VERIFY_EMAIL" | "RESET_PASSWORD";
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
