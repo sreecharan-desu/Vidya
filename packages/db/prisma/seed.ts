@@ -3,7 +3,10 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-/** Local demo credentials — documented in issue #4 / PR. */
+/**
+ * Local/demo provisioned accounts (students do not self-register).
+ * In production, admins will create/reset student credentials.
+ */
 const STUDENT_EMAIL = "student@vidya.test";
 const STUDENT_PASSWORD = "StudentDemo1!";
 const ADMIN_EMAIL = "admin@example.com";
@@ -38,6 +41,7 @@ async function main() {
     update: {
       name: "Admin",
       role: "ADMIN",
+      department: "Academic Director · AP SCERT Division",
       passwordHash: adminHash,
       emailVerifiedAt: new Date(),
     },
@@ -45,6 +49,27 @@ async function main() {
       email: ADMIN_EMAIL,
       name: "Admin",
       role: "ADMIN",
+      department: "Academic Director · AP SCERT Division",
+      passwordHash: adminHash,
+      emailVerifiedAt: new Date(),
+    },
+  });
+
+  const VIDYA_ADMIN_EMAIL = "admin@vidya.edu.in";
+  await prisma.user.upsert({
+    where: { email: VIDYA_ADMIN_EMAIL },
+    update: {
+      name: "Dr. Ramesh Sharma",
+      role: "ADMIN",
+      department: "Academic Director · AP SCERT Division",
+      passwordHash: adminHash,
+      emailVerifiedAt: new Date(),
+    },
+    create: {
+      email: VIDYA_ADMIN_EMAIL,
+      name: "Dr. Ramesh Sharma",
+      role: "ADMIN",
+      department: "Academic Director · AP SCERT Division",
       passwordHash: adminHash,
       emailVerifiedAt: new Date(),
     },
@@ -53,6 +78,7 @@ async function main() {
   console.log("Seeded users:");
   console.log(`  student: ${STUDENT_EMAIL} / ${STUDENT_PASSWORD} (verified)`);
   console.log(`  admin:   ${ADMIN_EMAIL} / ${ADMIN_PASSWORD} (verified)`);
+  console.log(`  admin:   ${VIDYA_ADMIN_EMAIL} / ${ADMIN_PASSWORD} (verified)`);
 }
 
 main()

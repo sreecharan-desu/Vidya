@@ -3,6 +3,7 @@
 # dependencies
 node_modules/
 .pnpm-store/
+.turbo/
 
 # Expo
 .expo/
@@ -41,7 +42,11 @@ yarn-error.*
 /ios
 /android
 
+# env
+.env
+.env.*
+!.env.example
+
 # turbo cache
 .turbo/
 **/.turbo/
-
