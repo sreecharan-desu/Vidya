@@ -1,3 +1,4 @@
+import { ConfigService } from "@nestjs/config";
 import jwt from "jsonwebtoken";
 
 export type JwtPayload = {
@@ -7,8 +8,8 @@ export type JwtPayload = {
   name: string;
 };
 
-const getSecret = (): string => {
-  const secret = process.env.JWT_SECRET;
+const resolveSecret = (config?: ConfigService): string => {
+  const secret = config?.get<string>("JWT_SECRET") ?? process.env.JWT_SECRET;
   if (!secret) {
     if (process.env.NODE_ENV === "production") {
       throw new Error("JWT_SECRET is required in production");
@@ -18,11 +19,16 @@ const getSecret = (): string => {
   return secret;
 };
 
-export const signAccessToken = (payload: JwtPayload): string =>
-  jwt.sign(payload, getSecret(), { expiresIn: "7d" });
+export const signAccessToken = (
+  payload: JwtPayload,
+  config?: ConfigService
+): string => jwt.sign(payload, resolveSecret(config), { expiresIn: "7d" });
 
-export const verifyAccessToken = (token: string): JwtPayload => {
-  const decoded = jwt.verify(token, getSecret());
+export const verifyAccessToken = (
+  token: string,
+  config?: ConfigService
+): JwtPayload => {
+  const decoded = jwt.verify(token, resolveSecret(config));
   if (typeof decoded === "string" || !decoded || typeof decoded !== "object") {
     throw new Error("Invalid token");
   }

@@ -3,7 +3,11 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "ES2021",
-    "noEmit": true
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "types": ["node"]
   },
   "include": ["src"]
 }
