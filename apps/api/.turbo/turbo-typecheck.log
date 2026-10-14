@@ -1,4 +1,0 @@
-
-> @vidya/api@0.0.1 typecheck C:\Users\hp\Documents\vidya-learning-app\apps\api
-> tsc -p tsconfig.json --noEmit
-
