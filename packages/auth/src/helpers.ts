@@ -1,10 +1,14 @@
-import { AuthUser, UserRole } from "./types";
+import { type UserRole } from "./types";
+
+type RoleLike = {
+  role: UserRole;
+} & Record<string, unknown>;
 
 /**
  * Returns true if the user has the specified role.
  */
 export const hasRole = (
-  user: AuthUser | null | undefined,
+  user: RoleLike | null | undefined,
   role: UserRole
 ): boolean => {
   return !!user && user.role === role;
@@ -14,7 +18,7 @@ export const hasRole = (
  * Returns true if the user is a student.
  */
 export const isStudent = (
-  user: AuthUser | null | undefined
+  user: RoleLike | null | undefined
 ): boolean => {
   return hasRole(user, "STUDENT");
 };
