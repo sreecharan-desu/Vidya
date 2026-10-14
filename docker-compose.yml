@@ -1,0 +1,89 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: vidya-postgres
+    environment:
+      POSTGRES_USER: vidya
+      POSTGRES_PASSWORD: vidya
+      POSTGRES_DB: vidya
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vidya -d vidya"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: vidya-mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  api:
+    image: vidya-learning-app:dev
+    build:
+      context: .
+      target: dev
+    container_name: vidya-api
+    command: sh -c "pnpm --dir packages/db exec prisma migrate deploy && pnpm --dir packages/db seed && pnpm dev:api"
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      DATABASE_URL: postgresql://vidya:vidya@postgres:5432/vidya?schema=public
+      JWT_SECRET: dev-only-jwt-secret-change-me
+      SMTP_HOST: mailhog
+      SMTP_PORT: "1025"
+      SMTP_USER: ""
+      SMTP_PASS: ""
+      SMTP_FROM: "Vidya <noreply@vidya.local>"
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/api/node_modules
+      - /app/packages/db/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+
+  student-mobile-web:
+    image: vidya-learning-app:dev
+    build:
+      context: .
+      target: dev
+    container_name: vidya-student-mobile-web
+    command: pnpm --dir apps/student-mobile exec expo start --web --host lan --port 8081
+    environment:
+      EXPO_NO_TELEMETRY: "1"
+    ports:
+      - "8081:8081"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/student-mobile/node_modules
+
+  admin-mobile-web:
+    image: vidya-learning-app:dev
+    build:
+      context: .
+      target: dev
+    container_name: vidya-admin-mobile-web
+    command: pnpm --dir apps/admin-mobile exec expo start --web --host lan --port 8082
+    environment:
+      EXPO_NO_TELEMETRY: "1"
+    ports:
+      - "8082:8082"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/admin-mobile/node_modules
+
+volumes:
+  postgres-data:

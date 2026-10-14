@@ -1,10 +1,15 @@
 {
   "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "useDefineForClassFields": false
+  },
   "include": [
     "apps/student-mobile/**/*",
+    "apps/admin-mobile/**/*",
     "apps/api/**/*",
-    "apps/student-web/**/*",
-    "apps/admin-web/**/*",
     "packages/**/*"
   ],
   "exclude": ["packages/db/prisma/seed.ts"]

@@ -17,10 +17,6 @@ This document is the source of truth for implementation tasks across the Vidya m
 - **Dripsy** for responsive styling and theming.
 - **Unistyles** for themes, breakpoints, and responsive styling.
 
-### Web Apps
-
-- **Next.js** for student and admin web applications.
-
 ## Backend
 
 - **NestJS v11** as the backend application framework.
@@ -32,7 +28,7 @@ This document is the source of truth for implementation tasks across the Vidya m
 - **CORS** for controlled cross-origin access.
 - **Swagger / OpenAPI** for API documentation.
 - **bcrypt** for password hashing.
-- **Docker** for local backend and database development.
+- **Docker Compose** for local development across PostgreSQL, API, and Expo app services.
 
 ## Official Docs
 
@@ -41,3 +37,13 @@ This document is the source of truth for implementation tasks across the Vidya m
 - PostgreSQL: https://www.postgresql.org/
 - Prisma: https://www.prisma.io/
 - Swagger: https://swagger.io/specification/
+
+## Local Runtime
+
+Use Docker Compose for local development:
+
+```bash
+pnpm docker:up
+```
+
+Deployment scripts and deployment platform config are intentionally out of scope for now.

@@ -1,0 +1,17 @@
+.git
+.github
+.claude
+node_modules
+**/node_modules
+dist
+**/dist
+build
+**/build
+.expo
+**/.expo
+.turbo
+coverage
+*.log
+.env
+.env.*
+!.env.example
