@@ -15,21 +15,23 @@ import { BookmarkItem, UserProfile } from '../types/curriculum';
 
 export const useLearningProgress = () => {
   const dispatch = useAppDispatch();
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const profile = useAppSelector((state) => state.student.profile);
   const studentLoading = useAppSelector((state) => state.student.loading);
   const progressMap = useAppSelector((state) => state.progress.progressMap);
   const bookmarks = useAppSelector((state) => state.progress.bookmarks);
   const progressLoading = useAppSelector((state) => state.progress.loading);
 
-  const loading = studentLoading && !profile;
+  const loading = isAuthenticated && studentLoading && !profile;
 
   const refreshData = useCallback(async () => {
+    if (!isAuthenticated) return;
     await Promise.all([
       dispatch(fetchProfileThunk()),
       dispatch(fetchProgressThunk()),
       dispatch(fetchBookmarksThunk()),
     ]);
-  }, [dispatch]);
+  }, [dispatch, isAuthenticated]);
 
   useEffect(() => {
     refreshData();

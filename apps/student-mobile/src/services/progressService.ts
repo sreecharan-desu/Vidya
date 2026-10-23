@@ -1,6 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BookmarkItem, ChapterProgress, UserProfile } from '../types/curriculum';
 import { studentsApi } from './apiClient';
+import {
+  DEFAULT_USER_PROFILE,
+  normalizeProfile,
+  toApiProfilePatch,
+} from './profileMapper';
 
 const STORAGE_KEYS = {
   BOOKMARKS: '@vidya_bookmarks',
@@ -8,30 +13,7 @@ const STORAGE_KEYS = {
   USER_PROFILE: '@vidya_user_profile',
 };
 
-const DEFAULT_PROFILE: UserProfile = {
-  displayName: '',
-  firstName: '',
-  lastName: '',
-  dateOfBirth: '',
-  gender: '',
-  activeClassId: '',
-  schoolName: '',
-  location: '',
-  district: '',
-  section: '',
-  rollNumber: '',
-  medium: '',
-  fatherName: '',
-  motherName: '',
-  guardianName: '',
-  guardianPhone: '',
-  parentPhone: '',
-  academicYear: '',
-  isOnboarded: false,
-  streakDays: 0,
-  avatarUrl: '',
-  studyGoalMinutes: 0,
-};
+const DEFAULT_PROFILE = DEFAULT_USER_PROFILE;
 
 // ========================
 // USER PROFILE & CLASS
@@ -40,8 +22,9 @@ export const getUserProfile = async (): Promise<UserProfile> => {
   try {
     const apiProfile = await studentsApi.getProfile();
     if (apiProfile) {
-      await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(apiProfile));
-      return { ...DEFAULT_PROFILE, ...apiProfile };
+      const profile = normalizeProfile(apiProfile);
+      await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
+      return profile;
     }
   } catch {
     // Offline fallback
@@ -50,7 +33,7 @@ export const getUserProfile = async (): Promise<UserProfile> => {
   try {
     const data = await AsyncStorage.getItem(STORAGE_KEYS.USER_PROFILE);
     if (!data) return DEFAULT_PROFILE;
-    return { ...DEFAULT_PROFILE, ...JSON.parse(data) };
+    return normalizeProfile(JSON.parse(data));
   } catch {
     return DEFAULT_PROFILE;
   }
@@ -61,7 +44,7 @@ export const updateActiveGrade = async (classId: string): Promise<void> => {
     const profile = await getUserProfile();
     const updated = { ...profile, activeClassId: classId };
     await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(updated));
-    studentsApi.updateProfile({ activeClassId: classId }).catch(() => {});
+    studentsApi.updateProfile(toApiProfilePatch({ activeClassId: classId })).catch(() => {});
   } catch (error) {
     console.error('Failed to update active grade:', error);
   }
@@ -72,7 +55,7 @@ export const updateUserProfile = async (updates: Partial<UserProfile>): Promise<
     const current = await getUserProfile();
     const merged = { ...current, ...updates };
     await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(merged));
-    studentsApi.updateProfile(updates).catch(() => {});
+    studentsApi.updateProfile(toApiProfilePatch(updates)).catch(() => {});
     return merged;
   } catch {
     return DEFAULT_PROFILE;

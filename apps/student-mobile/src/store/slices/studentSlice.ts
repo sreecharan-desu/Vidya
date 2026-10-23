@@ -1,6 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { studentsApi, schoolsApi } from '../../services/apiClient';
+import {
+  normalizeProfile,
+  toApiProfilePatch,
+} from '../../services/profileMapper';
 import { UserProfile } from '../../types/curriculum';
 
 const USER_PROFILE_STORAGE_KEY = '@vidya_user_profile';
@@ -34,21 +38,20 @@ export const fetchProfileThunk = createAsyncThunk(
   'student/fetchProfile',
   async (_, { rejectWithValue }) => {
     try {
-      // 1. Fetch from PostgreSQL via backend API
       const backendProfile = await studentsApi.getProfile();
       if (backendProfile) {
-        await AsyncStorage.setItem(USER_PROFILE_STORAGE_KEY, JSON.stringify(backendProfile));
-        return backendProfile;
+        const profile = normalizeProfile(backendProfile);
+        await AsyncStorage.setItem(USER_PROFILE_STORAGE_KEY, JSON.stringify(profile));
+        return profile;
       }
       return null;
     } catch (err: any) {
-      // 2. Fallback to AsyncStorage cache
       try {
         const cached = await AsyncStorage.getItem(USER_PROFILE_STORAGE_KEY);
         if (cached) {
-          return JSON.parse(cached);
+          return normalizeProfile(JSON.parse(cached));
         }
-      } catch (cacheErr) {
+      } catch {
         // ignore
       }
       return rejectWithValue(err.response?.data?.message || err.message || 'Failed to fetch profile');
@@ -60,9 +63,8 @@ export const submitOnboardingThunk = createAsyncThunk(
   'student/submitOnboarding',
   async (formData: Record<string, any>, { rejectWithValue }) => {
     try {
-      // Send to PostgreSQL via /api/v1/students/me/onboarding
       const res = await studentsApi.submitOnboarding(formData);
-      const updatedProfile = res.profile || res;
+      const updatedProfile = normalizeProfile(res.profile || res);
       await AsyncStorage.setItem(USER_PROFILE_STORAGE_KEY, JSON.stringify(updatedProfile));
       return updatedProfile;
     } catch (err: any) {
@@ -76,8 +78,8 @@ export const updateProfileThunk = createAsyncThunk(
   'student/updateProfile',
   async (updates: Partial<UserProfile>, { rejectWithValue }) => {
     try {
-      const res = await studentsApi.updateProfile(updates);
-      const updated = res.profile || res;
+      const res = await studentsApi.updateProfile(toApiProfilePatch(updates));
+      const updated = normalizeProfile(res.profile || res);
       await AsyncStorage.setItem(USER_PROFILE_STORAGE_KEY, JSON.stringify(updated));
       return updated;
     } catch (err: any) {
