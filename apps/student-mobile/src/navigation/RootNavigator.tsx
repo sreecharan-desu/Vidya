@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { useAuth } from '../hooks/useAuth';
@@ -42,14 +41,13 @@ export const RootNavigator: React.FC = () => {
   const needsOnboarding = isAuthenticated && !profile?.isOnboarded;
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: Colors.surface },
-          animation: 'slide_from_right',
-        }}
-      >
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: Colors.surface },
+        animation: 'slide_from_right',
+      }}
+    >
         {!isAuthenticated ? (
           // Unauthenticated Stack: Protected routes are inaccessible
           <Stack.Group>
@@ -98,6 +96,5 @@ export const RootNavigator: React.FC = () => {
           </Stack.Group>
         )}
       </Stack.Navigator>
-    </NavigationContainer>
   );
 };

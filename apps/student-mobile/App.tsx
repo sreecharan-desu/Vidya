@@ -16,6 +16,7 @@ import {
   Inter_500Medium,
   Inter_600SemiBold,
 } from '@expo-google-fonts/inter';
+import { NavigationContainer } from '@react-navigation/native';
 import { AuthProvider } from './src/hooks/useAuth';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import Colors from './src/constants/colors';
@@ -44,7 +45,9 @@ export default function App() {
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <StatusBar style="dark" />
       <AuthProvider>
-        <RootNavigator />
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
       </AuthProvider>
     </SafeAreaProvider>
   );
