@@ -17,6 +17,8 @@ import {
   Inter_600SemiBold,
 } from '@expo-google-fonts/inter';
 import { NavigationContainer } from '@react-navigation/native';
+import { Provider } from 'react-redux';
+import { store } from './src/store';
 import { AuthProvider } from './src/hooks/useAuth';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import Colors from './src/constants/colors';
@@ -44,11 +46,13 @@ export default function App() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <StatusBar style="dark" />
-      <AuthProvider>
-        <NavigationContainer>
-          <RootNavigator />
-        </NavigationContainer>
-      </AuthProvider>
+      <Provider store={store}>
+        <AuthProvider>
+          <NavigationContainer>
+            <RootNavigator />
+          </NavigationContainer>
+        </AuthProvider>
+      </Provider>
     </SafeAreaProvider>
   );
 }
