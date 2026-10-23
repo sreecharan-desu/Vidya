@@ -19,6 +19,7 @@ import {
 } from '../services/notificationService';
 import { RootStackParamList } from '../types/navigation';
 import { Notification } from '../types/quiz';
+import { useAppPermission } from '../hooks/useAppPermission';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Notifications'>;
 
@@ -46,6 +47,8 @@ const formatTime = (timestamp: number): string => {
 export const NotificationsScreen: React.FC<Props> = ({ navigation }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const unreadCount = notifications.filter((n) => !n.read).length;
+  const { status, canUse, request, openSettings, shouldOpenSettings } =
+    useAppPermission('notifications', true);
 
   const loadNotifications = useCallback(async () => {
     await initializeNotificationsIfNeeded();
@@ -101,6 +104,32 @@ export const NotificationsScreen: React.FC<Props> = ({ navigation }) => {
             </TouchableOpacity>
           )}
         </View>
+
+        {/* Permission Banner if notifications are off */}
+        {!canUse && status !== null && status !== 'granted' && (
+          <View className="flex-row items-center p-3.5 rounded-2xl bg-amber-50 border border-amber-200 gap-3">
+            <View className="w-9 h-9 rounded-xl bg-amber-100 items-center justify-center">
+              <MaterialIcons name="notifications-off" size={20} color="#D97706" />
+            </View>
+            <View className="flex-1">
+              <Text className="font-manrope-bold text-xs text-amber-900">
+                Push Notifications are Off
+              </Text>
+              <Text className="font-manrope-medium text-[11px] text-amber-700 mt-0.5">
+                Enable permissions to get study reminders and exam circulars.
+              </Text>
+            </View>
+            <TouchableOpacity
+              className="px-3 py-1.5 rounded-lg bg-amber-600"
+              onPress={shouldOpenSettings ? openSettings : request}
+              activeOpacity={0.8}
+            >
+              <Text className="font-manrope-bold text-xs text-white">
+                {shouldOpenSettings ? 'Settings' : 'Enable'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
         {notifications.length > 0 ? (
           notifications.map((notif) => {
             const config = typeConfig[notif.type];

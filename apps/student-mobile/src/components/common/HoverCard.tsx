@@ -23,6 +23,48 @@ export const HoverCard: React.FC<HoverCardProps> = ({
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
+  const webStyle: any =
+    Platform.OS === 'web'
+      ? {
+          transitionDuration: '220ms',
+          transitionProperty: 'transform, box-shadow, border-color',
+          transitionTimingFunction: 'cubic-bezier(0.2, 0, 0, 1)',
+          cursor: onPress ? 'pointer' : 'default',
+        }
+      : undefined;
+
+  const hoveredStyle: ViewStyle | undefined = isHovered
+    ? {
+        transform: [{ translateY: lift }],
+        shadowColor: 'rgba(58, 45, 41, 0.14)',
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.14,
+        shadowRadius: 16,
+        elevation: 6,
+        borderColor: Colors.borderHover,
+      }
+    : undefined;
+
+  const combinedStyles: (ViewStyle | undefined)[] = [];
+  if (style) {
+    if (Array.isArray(style)) {
+      combinedStyles.push(...(style as any).flat(Infinity));
+    } else {
+      combinedStyles.push(style as ViewStyle);
+    }
+  }
+  if (webStyle) combinedStyles.push(webStyle);
+  if (hoveredStyle) combinedStyles.push(hoveredStyle);
+  if (isHovered && hoverStyle) {
+    if (Array.isArray(hoverStyle)) {
+      combinedStyles.push(...(hoverStyle as any).flat(Infinity));
+    } else {
+      combinedStyles.push(hoverStyle as ViewStyle);
+    }
+  }
+
+  const cleanStyles = combinedStyles.filter(Boolean);
+
   return (
     <Pressable
       className={className}
@@ -31,27 +73,7 @@ export const HoverCard: React.FC<HoverCardProps> = ({
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
       accessibilityRole={onPress ? 'button' : undefined}
-      style={[
-        style,
-        Platform.OS === 'web' && ({
-          transitionDuration: '220ms',
-          transitionProperty: 'transform, box-shadow, border-color',
-          transitionTimingFunction: 'cubic-bezier(0.2, 0, 0, 1)',
-          cursor: onPress ? 'pointer' : 'default',
-        } as any),
-        isHovered && [
-          {
-            transform: [{ translateY: lift }],
-            shadowColor: 'rgba(58, 45, 41, 0.14)',
-            shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.14,
-            shadowRadius: 16,
-            elevation: 6,
-            borderColor: Colors.borderHover,
-          },
-          hoverStyle,
-        ],
-      ]}
+      style={cleanStyles.length > 0 ? cleanStyles : undefined}
     >
       {children}
     </Pressable>

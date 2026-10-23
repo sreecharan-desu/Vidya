@@ -12,8 +12,9 @@ import { LoginScreen } from '../screens/auth/LoginScreen';
 // Authenticated Screens
 import { DashboardScreen } from '../screens/DashboardScreen';
 import { LearnScreen } from '../screens/LearnScreen';
-import { TasksScreen } from '../screens/TasksScreen';
-import { ProgressScreen } from '../screens/ProgressScreen';
+// Future screens (uncomment when ready):
+// import { TasksScreen } from '../screens/TasksScreen';
+// import { ProgressScreen } from '../screens/ProgressScreen';
 import { MyLearningScreen } from '../screens/MyLearningScreen';
 import { BookmarksScreen } from '../screens/BookmarksScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
@@ -25,22 +26,30 @@ import { QuizScreen } from '../screens/QuizScreen';
 import { QuizResultScreen } from '../screens/QuizResultScreen';
 import { NotificationsScreen } from '../screens/NotificationsScreen';
 import { NotificationDetailScreen } from '../screens/NotificationDetailScreen';
-import { ExamScheduleScreen } from '../screens/ExamScheduleScreen';
-import { ExamResultsScreen } from '../screens/ExamResultsScreen';
+// Future screens (uncomment when ready):
+// import { ExamsScreen } from '../screens/ExamsScreen';
+// import { ExamScheduleScreen } from '../screens/ExamScheduleScreen';
+// import { ExamResultsScreen } from '../screens/ExamResultsScreen';
+
+import { StudentOnboardingScreen } from '../screens/StudentOnboardingScreen';
+import { useLearningProgress } from '../hooks/useLearningProgress';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const RootNavigator: React.FC = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { profile, loading: profileLoading } = useLearningProgress();
 
-  // Session validation in progress: show loading state without redirecting
-  if (loading) {
+  // Session & profile validation in progress: show loading state without redirecting
+  if (authLoading || profileLoading) {
     return (
       <View className="flex-1 bg-white items-center justify-center">
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
   }
+
+  const needsOnboarding = isAuthenticated && !profile?.isOnboarded;
 
   return (
     <NavigationContainer>
@@ -60,17 +69,35 @@ export const RootNavigator: React.FC = () => {
               options={{ animation: 'fade' }}
             />
           </Stack.Group>
+        ) : needsOnboarding ? (
+          // First-Time Student Onboarding: Collect school, class, section details
+          <Stack.Group>
+            <Stack.Screen
+              name="StudentOnboarding"
+              component={StudentOnboardingScreen}
+              options={{ animation: 'fade' }}
+            />
+            <Stack.Screen name="Home" component={DashboardScreen} />
+          </Stack.Group>
         ) : (
           // Authenticated Stack: Gated protected routes
           <Stack.Group>
-            {/* Main Tab Screens */}
+            {/* 3 Main Bottom Tab Screens */}
             <Stack.Screen name="Home" component={DashboardScreen} options={{ animation: 'fade' }} />
             <Stack.Screen name="Learn" component={LearnScreen} options={{ animation: 'fade' }} />
+            {/* Future tab screens (uncomment when ready):
             <Stack.Screen name="Tasks" component={TasksScreen} options={{ animation: 'fade' }} />
             <Stack.Screen name="Progress" component={ProgressScreen} options={{ animation: 'fade' }} />
-            <Stack.Screen name="Profile" component={ProfileScreen} options={{ animation: 'fade' }} />
+            <Stack.Screen name="Exams" component={ExamsScreen} options={{ animation: 'fade' }} />
+            */}
 
-            {/* Legacy Screens */}
+            {/* Student Onboarding & Academic Details Editor */}
+            <Stack.Screen name="StudentOnboarding" component={StudentOnboardingScreen} />
+
+            {/* Account & Profile Screen */}
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+
+            {/* Secondary Screens */}
             <Stack.Screen name="MyLearning" component={MyLearningScreen} options={{ animation: 'fade' }} />
             <Stack.Screen name="Bookmarks" component={BookmarksScreen} options={{ animation: 'fade' }} />
 
@@ -88,9 +115,10 @@ export const RootNavigator: React.FC = () => {
             <Stack.Screen name="Notifications" component={NotificationsScreen} />
             <Stack.Screen name="NotificationDetail" component={NotificationDetailScreen} />
 
-            {/* Exam Schedule & Results */}
-            <Stack.Screen name="ExamSchedule" component={ExamScheduleScreen} />
-            <Stack.Screen name="ExamResults" component={ExamResultsScreen} />
+            {/* Future: Direct Shortcuts for Exams (uncomment when ready):
+            <Stack.Screen name="ExamSchedule" component={ExamsScreen} />
+            <Stack.Screen name="ExamResults" component={ExamsScreen} />
+            */}
           </Stack.Group>
         )}
       </Stack.Navigator>

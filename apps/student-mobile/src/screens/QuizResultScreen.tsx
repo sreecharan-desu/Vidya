@@ -27,7 +27,7 @@ export const QuizResultScreen: React.FC<Props> = ({ route, navigation }) => {
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
       <HeaderBar
         showBack
-        onBackPress={() => navigation.navigate('Tasks')}
+        onBackPress={() => navigation.navigate('Learn')}
         title="Quiz Completed"
         subtitle={passed ? 'Outstanding performance!' : 'Keep practicing and improving'}
       />
@@ -152,11 +152,11 @@ export const QuizResultScreen: React.FC<Props> = ({ route, navigation }) => {
 
           <TouchableOpacity
             className="flex-row items-center justify-center gap-2 py-3.5 rounded-2xl border border-border bg-white shadow-sm"
-            onPress={() => navigation.navigate('Tasks')}
+            onPress={() => navigation.navigate('Learn')}
             activeOpacity={0.85}
           >
-            <MaterialIcons name="assignment" size={18} color={Colors.primary} />
-            <Text className="font-manrope-bold text-sm text-primary">View Assigned Tasks</Text>
+            <MaterialIcons name="auto-stories" size={18} color={Colors.primary} />
+            <Text className="font-manrope-bold text-sm text-primary">Continue Learning</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -171,7 +171,7 @@ export const QuizResultScreen: React.FC<Props> = ({ route, navigation }) => {
       </ScrollView>
 
       {/* Persistent Bottom Navigation */}
-      <BottomNav activeTab="Tasks" navigation={navigation} />
+      <BottomNav activeTab="Learn" navigation={navigation} />
     </View>
   );
 };

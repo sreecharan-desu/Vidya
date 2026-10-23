@@ -3,21 +3,28 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 export type MainTabParamList = {
   Home: undefined;
   Learn: undefined;
-  Tasks: undefined;
-  Progress: undefined;
   Profile: undefined;
+  // Future tabs (preserved for reactivation):
+  Tasks?: undefined;
+  Progress?: undefined;
+  Exams?: { initialTab?: 'schedule' | 'results' } | undefined;
   // Keep legacy for backward compat
-  MyLearning: undefined;
-  Bookmarks: undefined;
+  MyLearning?: undefined;
+  Bookmarks?: undefined;
 };
 
 export type RootStackParamList = {
   Login: undefined;
+  StudentOnboarding: { isEdit?: boolean } | undefined;
   Home: undefined;
   Learn: undefined;
-  Tasks: undefined;
-  Progress: undefined;
   Profile: undefined;
+  // Future / dormant screens (preserved for instant reactivation):
+  Tasks?: undefined;
+  Progress?: undefined;
+  Exams?: { initialTab?: 'schedule' | 'results' } | undefined;
+  ExamSchedule?: undefined;
+  ExamResults?: undefined;
   // Legacy screens (still accessible via navigation)
   MyLearning: undefined;
   Bookmarks: undefined;
@@ -37,6 +44,4 @@ export type RootStackParamList = {
   };
   Notifications: undefined;
   NotificationDetail: { notificationId: string };
-  ExamSchedule: undefined;
-  ExamResults: undefined;
 };

@@ -68,12 +68,13 @@ export const LoginScreen: React.FC = () => {
     }
   };
 
-  const handleFillDemo = (demoEmail: string, demoPass: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-    setErrorMessage(null);
-    setForgotPasswordNotice(null);
-  };
+  // Future: Restore handleFillDemo when quick credentials are re-enabled
+  // const handleFillDemo = (demoEmail: string, demoPass: string) => {
+  //   setEmail(demoEmail);
+  //   setPassword(demoPass);
+  //   setErrorMessage(null);
+  //   setForgotPasswordNotice(null);
+  // };
 
   const handleForgotPassword = () => {
     const copy = 'Please contact the administrator to reset your password.';
@@ -213,7 +214,7 @@ export const LoginScreen: React.FC = () => {
           )}
         </TouchableOpacity>
 
-        {/* Quick Demo Credentials */}
+        {/* Future options (commented out): Quick Test Credentials and alternate sign-in methods
         <View className="mt-7 p-3.5 rounded-xl bg-palePeach/70 border border-[#f2ded3]">
           <Text className="font-manrope-bold text-[11px] text-primary uppercase tracking-wider mb-2">
             Quick Test Credentials
@@ -231,7 +232,6 @@ export const LoginScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Divider */}
         <View className="flex-row items-center my-6">
           <View className="flex-1 h-[1px] bg-border" />
           <Text className="mx-3 font-manrope-medium text-[11px] text-textMuted uppercase tracking-wider">
@@ -240,7 +240,6 @@ export const LoginScreen: React.FC = () => {
           <View className="flex-1 h-[1px] bg-border" />
         </View>
 
-        {/* Social login kept as stale UI — not wired (out of scope). */}
         <View className="gap-2.5">
           <TouchableOpacity
             className="h-11 rounded-xl border border-border bg-white flex-row items-center justify-center px-4 gap-3 shadow-xs opacity-60"
@@ -271,6 +270,7 @@ export const LoginScreen: React.FC = () => {
             </Text>
           </TouchableOpacity>
         </View>
+        */}
 
         {/* Account Provisioning Footer Note */}
         <View className="mt-8 p-3 rounded-xl bg-slate-50 border border-slate-200">

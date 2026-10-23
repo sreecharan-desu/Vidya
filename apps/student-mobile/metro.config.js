@@ -15,6 +15,7 @@ config.resolver.nodeModulesPaths = [
 ];
 
 module.exports = withNativeWind(config, {
-  input: path.resolve(projectRoot, "global.css"),
-  configPath: path.resolve(projectRoot, "tailwind.config.js"),
+  input: "./global.css",
+  projectRoot: projectRoot,
+  inlineRem: 16,
 });

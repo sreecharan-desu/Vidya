@@ -119,7 +119,7 @@ export const QuizScreen: React.FC<Props> = ({ route, navigation }) => {
           <Text className="font-manrope-extrabold text-base text-textPrimary">Quiz not available</Text>
           <Text className="font-manrope-medium text-xs text-textMuted">This quiz hasn't been created yet.</Text>
         </View>
-        <BottomNav activeTab="Tasks" navigation={navigation} />
+        <BottomNav activeTab="Learn" navigation={navigation} />
       </View>
     );
   }
@@ -315,7 +315,7 @@ export const QuizScreen: React.FC<Props> = ({ route, navigation }) => {
       </ScrollView>
 
       {/* Persistent Bottom Navigation */}
-      <BottomNav activeTab="Tasks" navigation={navigation} />
+      <BottomNav activeTab="Learn" navigation={navigation} />
     </View>
   );
 };

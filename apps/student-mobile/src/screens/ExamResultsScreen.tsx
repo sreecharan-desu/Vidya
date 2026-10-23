@@ -304,8 +304,12 @@ export const ExamResultsScreen: React.FC<Props> = ({ navigation }) => {
             </View>
 
             <View className="bg-success px-2.5 py-0.5 rounded-full flex-shrink-0">
-              <Text className="font-manrope-extrabold text-[10px] text-white">
-                {result.status}
+              <Text className="font-manrope-extrabold text-[10px] text-white uppercase tracking-wider">
+                {result.status.includes('PASSED')
+                  ? 'PASSED'
+                  : result.status.includes('PROMOTED')
+                  ? 'PROMOTED'
+                  : 'EVALUATED'}
               </Text>
             </View>
           </View>

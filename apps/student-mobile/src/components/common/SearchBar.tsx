@@ -10,6 +10,7 @@ interface SearchBarProps {
   onClear?: () => void;
   showFilterButton?: boolean;
   onFilterPress?: () => void;
+  isFilterActive?: boolean;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -19,6 +20,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   onClear,
   showFilterButton = false,
   onFilterPress,
+  isFilterActive = false,
 }) => {
   return (
     <View className="flex-row items-center gap-2">
@@ -46,12 +48,24 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
       {showFilterButton && (
         <TouchableOpacity
-          className="h-[52px] flex-row items-center gap-1.5 px-4 rounded-2xl border border-border bg-white shadow-sm"
+          className={`h-[52px] flex-row items-center gap-1.5 px-4 rounded-2xl border shadow-sm ${
+            isFilterActive ? 'border-primary bg-palePeach' : 'border-border bg-white'
+          }`}
           onPress={onFilterPress}
           activeOpacity={0.8}
         >
-          <MaterialIcons name="tune" size={18} color={Colors.primary} />
-          <Text className="font-manrope-bold text-[13px] text-primary">Filter</Text>
+          <MaterialIcons
+            name="tune"
+            size={18}
+            color={isFilterActive ? Colors.primaryDark : Colors.primary}
+          />
+          <Text
+            className={`font-manrope-bold text-[13px] ${
+              isFilterActive ? 'text-primaryDark' : 'text-primary'
+            }`}
+          >
+            {isFilterActive ? 'Filtered' : 'Filter'}
+          </Text>
         </TouchableOpacity>
       )}
     </View>

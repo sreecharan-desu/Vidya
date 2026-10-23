@@ -206,7 +206,7 @@ export const MyLearningScreen: React.FC<Props> = ({ navigation }) => {
           )}
         </View>
       </ScrollView>
-      <BottomNav activeTab="Progress" navigation={navigation} />
+      <BottomNav activeTab="Learn" navigation={navigation} />
     </View>
   );
 };

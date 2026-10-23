@@ -10,7 +10,24 @@ const STORAGE_KEYS = {
 
 const DEFAULT_PROFILE: UserProfile = {
   displayName: 'Aarav Sharma',
+  firstName: 'Aarav',
+  lastName: 'Sharma',
+  dateOfBirth: '15/08/2012',
+  gender: 'Male',
   activeClassId: 'class-8',
+  schoolName: 'Zilla Parishad High School',
+  location: 'Guntur Urban',
+  district: 'Guntur',
+  section: 'A',
+  rollNumber: '18',
+  medium: 'English Medium',
+  fatherName: 'Venkata Sharma',
+  motherName: 'Lakshmi Sharma',
+  guardianName: 'Venkata Sharma',
+  guardianPhone: '+91 98765 43210',
+  parentPhone: '+91 98765 43210',
+  academicYear: '2026–2027',
+  isOnboarded: false,
   streakDays: 5,
   avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDwylJurXETzm0O1bhmUGXVZdrY4NZVe9bRVUKtWzV1pB3NMIS5iXL8yOYRJmYNOqbnFDfG9V0rOQVa0dhBzEIffjXwwNVgcTerM-rX9HvUfPs9WQ1Q_s81-mctf8krdw9dTXms5dUDGlQ_8o4Nj1Mr7mMG6mTSXA0jFoTw-bVtaKfHTWGdXQLFgHKt5TwMawFgBjZ-MozBABBOpECp8ro6P4lQCv-5YrbgDcLvz353lW4IGnhlqR9t',
   studyGoalMinutes: 45,
@@ -114,7 +131,8 @@ export const seedInitialDataIfNeeded = async (): Promise<void> => {
 export const getUserProfile = async (): Promise<UserProfile> => {
   try {
     const data = await AsyncStorage.getItem(STORAGE_KEYS.USER_PROFILE);
-    return data ? JSON.parse(data) : DEFAULT_PROFILE;
+    if (!data) return DEFAULT_PROFILE;
+    return { ...DEFAULT_PROFILE, ...JSON.parse(data) };
   } catch {
     return DEFAULT_PROFILE;
   }

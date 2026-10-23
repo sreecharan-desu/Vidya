@@ -7,7 +7,12 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Vidya needs camera access so you can take a photo for your student profile picture.",
+        "NSPhotoLibraryUsageDescription": "Vidya needs photo library access so you can choose a profile picture from your device.",
+        "NSPhotoLibraryAddUsageDescription": "Vidya needs save-to-photos access to export images you create in the app."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -16,13 +21,26 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "CAMERA",
+        "READ_MEDIA_IMAGES",
+        "READ_MEDIA_VISUAL_USER_SELECTED",
+        "POST_NOTIFICATIONS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Vidya needs camera access so you can take a photo for your student profile picture.",
+          "photosPermission": "Vidya needs photo library access so you can choose a profile picture from your device."
+        }
+      ]
     ]
   }
 }
