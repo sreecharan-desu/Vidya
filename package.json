@@ -30,5 +30,15 @@
   "dependencies": {
     "@neon/config": "^1.9.3",
     "@neon/env": "^1.6.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "fastify": "5.12.7",
+      "nodemailer": "10.2.1",
+      "uuid": "11.1.1",
+      "postcss-selector-parser": "7.1.7",
+      "js-yaml@^5.0.0": "5.5.0",
+      "js-yaml@~5": "5.5.0"
+    }
   }
 }
