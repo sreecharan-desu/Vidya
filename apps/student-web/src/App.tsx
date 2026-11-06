@@ -36,10 +36,17 @@ export default function App() {
           >
             <Route path="/" element={<Navigate to="/profile" replace />} />
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
