@@ -1,0 +1,1 @@
+Vidya automation smoke test. Safe to delete.
