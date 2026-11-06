@@ -3,6 +3,7 @@ import { Bell, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useProfile } from '../../hooks/useProfile';
+import { useNotifications } from '../../hooks/useNotifications';
 import { resolveAvatarUrl } from '../../lib/avatar';
 
 interface HeaderProps {
@@ -14,6 +15,7 @@ export const Header: React.FC<HeaderProps> = ({ title, breadcrumb }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { profile } = useProfile();
+  const { unreadCount } = useNotifications();
   const avatar = resolveAvatarUrl(profile?.avatarUrl);
   const [avatarError, setAvatarError] = useState(false);
   useEffect(() => setAvatarError(false), [profile?.avatarUrl]);
@@ -32,8 +34,18 @@ export const Header: React.FC<HeaderProps> = ({ title, breadcrumb }) => {
         <h1 className="mt-1 text-2xl font-bold text-textPrimary">{title}</h1>
       </div>
       <div className="flex items-center gap-4">
-        <button className="relative rounded-full p-2 text-textMuted hover:bg-slate-100">
-          <Bell className="h-5 w-5" />
+        <button
+          type="button"
+          onClick={() => navigate('/notifications')}
+          aria-label="Notifications"
+          className="relative flex h-10 w-10 items-center justify-center rounded-full border border-borderWarm bg-white"
+        >
+          <Bell className="h-5 w-5 text-textPrimary" />
+          {unreadCount > 0 && (
+            <span className="absolute -right-0.5 -top-0.5 flex h-[18px] w-[18px] items-center justify-center rounded-full border-2 border-white bg-error text-[9px] font-extrabold text-white">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
         </button>
         <button
           type="button"

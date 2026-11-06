@@ -8,6 +8,7 @@ const titles: Record<string, { title: string; breadcrumb: string[] }> = {
   '/profile': { title: 'My Profile', breadcrumb: ['Home', 'My Profile'] },
   '/courses': { title: 'Courses', breadcrumb: ['Home', 'Courses'] },
   '/settings': { title: 'Settings', breadcrumb: ['Home', 'Settings'] },
+  '/notifications': { title: 'Notifications', breadcrumb: ['Home', 'Notifications'] },
 };
 
 export const AppLayout: React.FC = () => {

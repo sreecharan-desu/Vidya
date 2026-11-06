@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useProfile } from '../hooks/useProfile';
+import { useNotifications } from '../hooks/useNotifications';
 import { apiClient } from '../lib/apiClient';
 import { resolveAvatarUrl } from '../lib/avatar';
 import { uploadAvatar } from '../services/profileService';
@@ -52,7 +53,7 @@ export const ProfilePage: React.FC = () => {
   const [offlineCache, setOfflineCache] = useState(true);
   const [studyMedium, setStudyMedium] = useState<'English' | 'Telugu'>('English');
   const [studyGoal, setStudyGoal] = useState('45 mins');
-  const [unreadCount, setUnreadCount] = useState(0);
+  const { unreadCount } = useNotifications();
 
   const [avatarError, setAvatarError] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<File | null>(null);
@@ -98,23 +99,6 @@ export const ProfilePage: React.FC = () => {
       })
       .catch(() => {
         // keep defaults
-      });
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    let mounted = true;
-    apiClient
-      .get<Array<{ isRead?: boolean; readAt?: string | null }>>('/api/v1/notifications')
-      .then((res) => {
-        if (!mounted) return;
-        const items = Array.isArray(res.data) ? res.data : [];
-        setUnreadCount(items.filter((n) => !n.isRead && !n.readAt).length);
-      })
-      .catch(() => {
-        // keep default
       });
     return () => {
       mounted = false;
