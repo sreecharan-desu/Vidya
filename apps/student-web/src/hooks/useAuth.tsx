@@ -21,6 +21,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .then((u) => {
         if (mounted) setUser(u);
       })
+      .catch(() => {
+        if (mounted) setUser(null);
+      })
       .finally(() => {
         if (mounted) setLoading(false);
       });

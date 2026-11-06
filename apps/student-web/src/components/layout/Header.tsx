@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Bell, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useProfile } from '../../hooks/useProfile';
 import { resolveAvatarUrl } from '../../lib/avatar';
@@ -10,6 +11,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ title, breadcrumb }) => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { profile } = useProfile();
   const avatar = resolveAvatarUrl(profile?.avatarUrl);
@@ -33,7 +35,12 @@ export const Header: React.FC<HeaderProps> = ({ title, breadcrumb }) => {
         <button className="relative rounded-full p-2 text-textMuted hover:bg-slate-100">
           <Bell className="h-5 w-5" />
         </button>
-        <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={() => navigate('/profile')}
+          className="flex items-center gap-3 rounded-lg px-2 py-1 transition hover:bg-palePeach"
+          aria-label="Open profile"
+        >
           {avatar && !avatarError ? (
             <img
               src={avatar}
@@ -50,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({ title, breadcrumb }) => {
             <p className="text-sm font-medium text-textPrimary">{displayName}</p>
             <p className="text-xs text-textMuted">Student</p>
           </div>
-        </div>
+        </button>
       </div>
     </header>
   );
