@@ -47,12 +47,21 @@ Run lint and typecheck before declaring any task done.
 - Docker Compose (`pnpm docker:up`) is optional and not used by `npm start`.
 - Do not add deployment scripts or deployment platform config until deployment is explicitly reintroduced.
 
+## Git & Pull Requests
+
+- `main` is protected. Never commit, push, or force-push directly to it.
+- Create a **new branch from the latest `main` for every task**:
+  `git switch -c feat/<short-slug> origin/main`. Use `fix/`, `docs/`, or `chore/` when it fits.
+- Do not reuse or push to an existing branch. One task = one branch = one PR.
+- Push the new branch, open a PR, and wait for the required `build` CI check to pass.
+- After merge, delete the branch so the remote keeps only `main`.
+- Do not rewrite shared history or force-push.
+
 ## Rules
 
 - If `ios/` and `android/` directories do not exist, they are generated (Continuous Native Generation). Never create or edit them by hand — configure native behavior in `app.json` and config plugins.
 - Expo Go only includes its bundled native modules. After adding a library with native code, the app needs a development build before device testing.
 - Prefer recommended Expo modules over third-party libraries, and check your available skills before adding dependencies. Docs: https://docs.expo.dev/versions/latest/index.md
-- **Git & Pushing**: Whenever pushing changes to GitHub for this project, always push to the branch `feat/student-mobile` only. Never push directly to `main`.
 
 <!-- BEGIN:turborepo-agent-rules -->
 
