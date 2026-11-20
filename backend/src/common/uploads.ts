@@ -5,8 +5,8 @@ import { resolve } from "node:path";
 export const UPLOADS_URL_PREFIX = "/uploads";
 
 /**
- * Root directory for user uploads. Defaults to `apps/api/uploads` (the API is
- * always started with `apps/api` as cwd); override with `UPLOADS_DIR`.
+ * Root directory for user uploads. Defaults to `backend/uploads` (the API is
+ * always started with `backend/` as cwd); override with `UPLOADS_DIR`.
  */
 export const uploadsRoot = (): string =>
   resolve(process.env.UPLOADS_DIR ?? resolve(process.cwd(), "uploads"));

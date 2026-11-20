@@ -30,7 +30,7 @@ Run lint and typecheck before declaring any task done.
 - Backend uses **NestJS v11** with `@nestjs/platform-fastify` and `fastify` v5.
 - Backend data/auth/docs stack is PostgreSQL with **raw `pg` SQL** (no ORM), Zod, JWT, CORS, Swagger/OpenAPI, and bcrypt.
 - Student-only product surface (no admin app / admin API routes).
-- Local default: `npm start` → `node scripts/start.mjs` (cross-platform macOS/Linux/Windows, **native Postgres**, no Docker). Full stack: migrate/seed + pgweb + API + student Expo. App only: `npm run start:app`. CLI: `npm run db:psql`.
+- Local default: `npm start` → `node backend/scripts/start.mjs` (cross-platform macOS/Linux/Windows, **native Postgres**, no Docker). Full stack: migrate/seed + pgweb + API + student Expo. App only: `npm run start:app`. CLI: `npm run db:psql`.
 - Do not reintroduce Prisma, Prisma Studio, or another ORM unless the architecture is intentionally changed.
 - See `docs/tech-stack.md` for the full project stack.
 

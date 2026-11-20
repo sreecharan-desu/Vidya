@@ -40,7 +40,7 @@ src/
 
 Auth: access JWT lives 15 minutes (`ACCESS_TOKEN_TTL`); refresh tokens live 30 days
 (`REFRESH_TOKEN_TTL_DAYS`), are stored as sha256 hashes in `"RefreshToken"` and rotate on every
-`/auth/refresh`. Avatars are written to `apps/api/uploads/avatars/{userId}.{ext}` (override with
+`/auth/refresh`. Avatars are written to `backend/uploads/avatars/{userId}.{ext}` (override with
 `UPLOADS_DIR`; git-ignored).
 
 There is no admin API surface. Student accounts are provisioned (no self-registration).
@@ -50,6 +50,6 @@ There is no admin API surface. Student accounts are provisioned (no self-registr
 ```bash
 npm start                 # from repo root: Postgres + migrate + seed + this API
 npm run db:psql           # interactive psql
-pnpm --dir apps/api test
-pnpm --dir apps/api typecheck
+pnpm --dir backend test
+pnpm --dir backend typecheck
 ```
