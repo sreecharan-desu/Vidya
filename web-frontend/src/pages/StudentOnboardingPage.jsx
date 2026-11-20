@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useProfile } from '../hooks/useProfile';
+import { extractErrorMessage } from '../lib/apiClient';
 import {
   Check,
   ChevronRight,
@@ -56,8 +57,8 @@ const POPULAR_SCHOOLS = [
 
 export const StudentOnboardingPage = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { profile, save } = useProfile();
+  const { setIsOnboarded } = useAuth();
+  const { profile, submitSetup } = useProfile();
 
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
@@ -105,8 +106,35 @@ export const StudentOnboardingPage = () => {
         setErrorMessage('Student first name and last name are required.');
         return false;
       }
+      if (firstName.trim().length < 2) {
+        setErrorMessage('First name must have at least 2 characters.');
+        return false;
+      }
+      if (!/^[A-Za-z\s]+$/.test(firstName.trim())) {
+        setErrorMessage('First name can only contain letters and spaces.');
+        return false;
+      }
+      if (!/^[A-Za-z\s]+$/.test(lastName.trim())) {
+        setErrorMessage('Last name can only contain letters and spaces.');
+        return false;
+      }
       if (!dateOfBirth.trim()) {
         setErrorMessage('Date of birth is required.');
+        return false;
+      }
+      const dobDate = new Date(`${dateOfBirth}T00:00:00Z`);
+      if (Number.isNaN(dobDate.getTime())) {
+        setErrorMessage('Please enter a valid date of birth.');
+        return false;
+      }
+      const now = new Date();
+      if (dobDate > now) {
+        setErrorMessage('Date of birth cannot be in the future.');
+        return false;
+      }
+      const age = (now.getTime() - dobDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000);
+      if (age < 5 || age > 25) {
+        setErrorMessage('Student age must be between 5 and 25 years old.');
         return false;
       }
     } else if (s === 2) {
@@ -124,10 +152,26 @@ export const StudentOnboardingPage = () => {
         setErrorMessage('Roll number is required.');
         return false;
       }
+      if (!/^[A-Za-z0-9\-_]+$/.test(rollNumber.trim())) {
+        setErrorMessage('Roll number can only contain letters, numbers, and hyphens.');
+        return false;
+      }
     } else if (s === 4) {
+      if (fatherName.trim() && !/^[A-Za-z\s.]+$/.test(fatherName.trim())) {
+        setErrorMessage('Father name can only contain letters, spaces, and dots.');
+        return false;
+      }
+      if (motherName.trim() && !/^[A-Za-z\s.]+$/.test(motherName.trim())) {
+        setErrorMessage('Mother name can only contain letters, spaces, and dots.');
+        return false;
+      }
       const cleanPhone = parentPhone.replace(/\D/g, '');
-      if (cleanPhone.length !== 10) {
-        setErrorMessage('Parent phone number must contain exactly 10 digits.');
+      if (parentPhone.length !== 10 || cleanPhone.length !== 10) {
+        setErrorMessage('Parent phone number must contain exactly 10 digits and numbers only.');
+        return false;
+      }
+      if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+        setErrorMessage('Parent phone number must be a valid 10-digit number starting with 6, 7, 8, or 9.');
         return false;
       }
     }
@@ -156,9 +200,10 @@ export const StudentOnboardingPage = () => {
     const effectiveSchool = customSchool.trim() || schoolName.trim();
 
     try {
-      await save({
+      await submitSetup({
         firstName: firstName.trim(),
         lastName: lastName.trim(),
+        dob: dateOfBirth,
         dateOfBirth,
         gender,
         district,
@@ -174,9 +219,10 @@ export const StudentOnboardingPage = () => {
         motherName: motherName.trim(),
         parentPhone: parentPhone.trim(),
       });
+      setIsOnboarded(true);
       navigate('/dashboard');
     } catch (err) {
-      setErrorMessage(err?.message || 'Could not complete onboarding. Please try again.');
+      setErrorMessage(extractErrorMessage(err) || 'Could not complete onboarding. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -237,8 +283,9 @@ export const StudentOnboardingPage = () => {
                   <input
                     type="text"
                     value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    onChange={(e) => setFirstName(e.target.value.replace(/[^A-Za-z\s]/g, '').slice(0, 50))}
                     placeholder="e.g. Arjun"
+                    maxLength={50}
                     required
                     className={styles.textInput}
                   />
@@ -248,8 +295,9 @@ export const StudentOnboardingPage = () => {
                   <input
                     type="text"
                     value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={(e) => setLastName(e.target.value.replace(/[^A-Za-z\s]/g, '').slice(0, 50))}
                     placeholder="e.g. Patel"
+                    maxLength={50}
                     required
                     className={styles.textInput}
                   />
@@ -261,6 +309,7 @@ export const StudentOnboardingPage = () => {
                 <input
                   type="date"
                   value={dateOfBirth}
+                  max={new Date().toISOString().slice(0, 10)}
                   onChange={(e) => setDateOfBirth(e.target.value)}
                   required
                   className={styles.textInput}
@@ -415,8 +464,9 @@ export const StudentOnboardingPage = () => {
                 <input
                   type="text"
                   value={rollNumber}
-                  onChange={(e) => setRollNumber(e.target.value)}
+                  onChange={(e) => setRollNumber(e.target.value.replace(/[^A-Za-z0-9\-_]/g, '').slice(0, 20))}
                   placeholder="e.g. 42"
+                  maxLength={20}
                   required
                   className={styles.textInput}
                 />
@@ -432,8 +482,9 @@ export const StudentOnboardingPage = () => {
                 <input
                   type="text"
                   value={fatherName}
-                  onChange={(e) => setFatherName(e.target.value)}
+                  onChange={(e) => setFatherName(e.target.value.replace(/[^A-Za-z\s.]/g, '').slice(0, 80))}
                   placeholder="Father's Full Name"
+                  maxLength={80}
                   className={styles.textInput}
                 />
               </div>
@@ -443,8 +494,9 @@ export const StudentOnboardingPage = () => {
                 <input
                   type="text"
                   value={motherName}
-                  onChange={(e) => setMotherName(e.target.value)}
+                  onChange={(e) => setMotherName(e.target.value.replace(/[^A-Za-z\s.]/g, '').slice(0, 80))}
                   placeholder="Mother's Full Name"
+                  maxLength={80}
                   className={styles.textInput}
                 />
               </div>
@@ -453,8 +505,10 @@ export const StudentOnboardingPage = () => {
                 <label className={styles.formLabel}>Parent / Guardian Phone (10 digits) *</label>
                 <input
                   type="tel"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   value={parentPhone}
-                  onChange={(e) => setParentPhone(e.target.value)}
+                  onChange={(e) => setParentPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
                   placeholder="9876543210"
                   maxLength={10}
                   required
