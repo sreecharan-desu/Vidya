@@ -67,8 +67,8 @@ export const toast = {
 
 export const ToastContainer: React.FC = () => {
   const [current, setCurrent] = useState<ToastData | null>(null);
-  const animY = useRef(new Animated.Value(-60)).current;
-  const animOpacity = useRef(new Animated.Value(0)).current;
+  const [animY] = useState(() => new Animated.Value(-60));
+  const [animOpacity] = useState(() => new Animated.Value(0));
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const dismiss = useCallback(() => {
