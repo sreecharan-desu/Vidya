@@ -29,7 +29,7 @@ npm start              # full stack: Postgres + migrate/seed + API + Expo + pgwe
 npm run start:app      # student Expo only (uses API URL from existing .env)
 ```
 
-`npm start` auto-detects your Wi‑Fi IP, runs migrate + seed (with status steps), writes `.env` + `apps/student-mobile/.env` / `.env.local`, and prints a URL board (LAN IP + localhost) for App / API / Docs / Database / DB UI. The Expo terminal stays interactive (QR + `i` / `a` / `w` / `r`).
+`npm start` auto-detects your Wi‑Fi IP, runs migrate + seed (with status steps), writes `.env` + `mobile-frontend/.env` / `.env.local`, and prints a URL board (LAN IP + localhost) for App / API / Docs / Database / DB UI. The Expo terminal stays interactive (QR + `i` / `a` / `w` / `r`).
 
 **Postgres (one-time):**
 - macOS: `brew install postgresql@17` (also auto-installed by `npm start` when Homebrew is present)
@@ -48,9 +48,8 @@ On Apple networks, share URLs often use `YourMac.local` (Bonjour) so teammates n
 
 ```bash
 pnpm exec tsc --noEmit
-pnpm --dir apps/api test
-pnpm --dir packages/auth test
-pnpm --dir apps/student-mobile test
+pnpm --dir backend test
+pnpm --dir mobile-frontend test
 ```
 
 ## Env
