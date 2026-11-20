@@ -15,9 +15,9 @@
     "@expo-google-fonts/manrope": "^0.4.2",
     "@expo/metro-runtime": "~58.0.17",
     "@expo/vector-icons": "^15.0.2",
-    "expo": "^58.0.0",
-    "expo-font": "~58.0.11",
-    "expo-status-bar": "~58.0.4",
+    "expo": "^58.0.26",
+    "expo-font": "~58.0.12",
+    "expo-status-bar": "~58.0.5",
     "nativewind": "^4.2.7",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -30,5 +30,10 @@
   "devDependencies": {
     "@types/react": "~19.3.0",
     "typescript": "~6.0.3"
+  },
+  "overrides": {
+    "@expo/fingerprint": {
+      "minimatch": "11.0.9"
+    }
   }
 }
