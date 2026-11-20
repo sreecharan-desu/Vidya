@@ -57,6 +57,25 @@ pnpm --dir apps/student-mobile test
 
 `npm start` writes `.env` with your LAN IP. See `.env.example`.
 
+## Contributing
+
+`main` is protected. Never commit, push, or force-push directly to it.
+
+1. Start from the latest `main` and create a **new branch for every task**:
+
+   ```bash
+   git switch main
+   git pull
+   git switch -c feat/<short-slug>
+   ```
+
+   Use the `fix/`, `docs/`, or `chore/` prefix when it fits.
+
+2. Push the branch and open a pull request. The required `build` check must pass.
+3. Squash-merge after review, then delete the branch.
+
+Do not reuse or push to an existing branch. One task = one branch = one PR.
+
 ## License
 
 [MIT](LICENSE)
