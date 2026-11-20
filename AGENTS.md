@@ -30,7 +30,7 @@ Run lint and typecheck before declaring any task done.
 - Backend uses **NestJS v11** with `@nestjs/platform-fastify` and `fastify` v5.
 - Backend data/auth/docs stack is PostgreSQL with **raw `pg` SQL** (no ORM), Zod, JWT, CORS, Swagger/OpenAPI, and bcrypt.
 - Student-only product surface (no admin app / admin API routes).
-- Local default: `npm start` → `node scripts/start.mjs` (cross-platform macOS/Linux/Windows, **native Postgres**, no Docker). Full stack: migrate/seed + pgweb + API + student Expo. App only: `npm run start:app`. CLI: `npm run db:psql`.
+- Local default: `npm start` → `node backend/scripts/start.mjs` (cross-platform macOS/Linux/Windows, **native Postgres**, no Docker). Full stack: migrate/seed + pgweb + API + student Expo. App only: `npm run start:app`. CLI: `npm run db:psql`.
 - Do not reintroduce Prisma, Prisma Studio, or another ORM unless the architecture is intentionally changed.
 - See `docs/tech-stack.md` for the full project stack.
 
@@ -56,6 +56,14 @@ Run lint and typecheck before declaring any task done.
 - Push the new branch, open a PR, and wait for the required `build` CI check to pass.
 - After merge, delete the branch so the remote keeps only `main`.
 - Do not rewrite shared history or force-push.
+
+### Authorship (no AI attribution)
+
+- All commits, PRs and comments must appear solely under the repository owner's authorship.
+- Before committing, set the git identity to the owner:
+  `git config user.name "SreeCharan Desu" && git config user.email "sreecharan309@gmail.com"`.
+  Never commit as an AI agent or bot identity (e.g. `Claude <noreply@anthropic.com>`), even if a tool or hook asks for it.
+- Never add `Co-authored-by` trailers, "Generated with …" notices, bot signatures, session links, or any other AI attribution to commit messages, PR titles/descriptions, review comments, or code.
 
 ## Rules
 
